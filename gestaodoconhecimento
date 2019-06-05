@@ -1,0 +1,111 @@
+
+# coding: utf-8
+
+#Importar a base de dados
+
+from sklearn.datasets import load_breast_cancer
+cancer = load_breast_cancer()
+print("cancer.keys(): \n{}".format(cancer.keys()))
+print(cancer.data)
+X = cancer.data
+y = cancer.target
+
+
+#Treinando o modelo
+
+from sklearn.neighbors import KNeighborsClassifier 
+knn = KNeighborsClassifier(n_neighbors=1)
+print(knn)
+knn.fit(X, y)
+knn.predict([[3, 5, 4, 2, 3, 5, 4, 2, 3, 5, 4, 2, 3, 5, 4, 2, 3, 5, 4, 2, 3, 5, 4, 2, 3, 5, 4, 2, 3, 5]])
+X_new = [[3, 5, 4, 2, 3, 5, 4, 2, 3, 5, 4, 2, 3, 5, 4, 2, 3, 5, 4, 2, 3, 5, 4, 2, 3, 5, 4, 2, 3, 5], [5, 4, 3, 2, 5, 4, 3, 2, 5, 4, 3, 2, 5, 4, 3, 2, 5, 4, 3, 2, 5, 4, 3, 2, 5, 4, 3, 2, 5, 4]]
+knn.predict(X_new)
+
+knn = KNeighborsClassifier(n_neighbors=5)
+knn.fit(X, y)
+knn.predict(X_new)
+
+from sklearn.linear_model import LogisticRegression
+logreg = LogisticRegression()
+logreg.fit(X, y)
+logreg.predict(X_new)
+logreg = LogisticRegression()
+logreg.fit(X, y)
+logreg.predict(X)
+y_pred = logreg.predict(X)
+len(y_pred)
+
+#Calculo acuracia
+
+from sklearn import metrics
+print(metrics.accuracy_score(y, y_pred))
+
+
+#Modelo todo - KNN(5)
+from sklearn.neighbors import KNeighborsClassifier
+knn = KNeighborsClassifier(n_neighbors=5)
+knn.fit(X, y)
+y_pred = knn.predict(X)
+print(metrics.accuracy_score(y, y_pred))
+
+#Modelo todo - KNN(1)
+knn = KNeighborsClassifier(n_neighbors=1)
+knn.fit(X, y)
+y_pred = knn.predict(X)
+print(metrics.accuracy_score(y, y_pred))
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, random_state=30)
+
+
+print(X_train.shape)
+print(X_test.shape)
+
+
+print(y_train.shape)
+print(y_test.shape)
+
+
+logreg = LogisticRegression()
+logreg.fit(X_train, y_train)
+y_pred = logreg.predict(X_test)
+
+print(metrics.accuracy_score(y_test, y_pred))
+
+
+#Train/Test Split KNN with K=5:
+knn = KNeighborsClassifier(n_neighbors=5)
+knn.fit(X_train, y_train)
+y_pred = knn.predict(X_test)
+print(metrics.accuracy_score(y_test, y_pred))
+
+
+#Train/Test Split KNN with K=1
+knn = KNeighborsClassifier(n_neighbors=1)
+knn.fit(X_train, y_train)
+y_pred = knn.predict(X_test)
+print(metrics.accuracy_score(y_test, y_pred))
+
+
+# Criação do gráfico
+k_range = list(range(1, 26))
+scores = []
+for k in k_range:
+    knn = KNeighborsClassifier(n_neighbors=k)
+    knn.fit(X_train, y_train)
+    y_pred = knn.predict(X_test)
+    scores.append(metrics.accuracy_score(y_test, y_pred))
+
+
+
+# import Matplotlib (scientific plotting library)
+import matplotlib.pyplot as plt
+
+# allow plots to appear within the notebook
+get_ipython().magic(u'matplotlib inline')
+
+# plot the relationship between K and testing accuracy
+plt.plot(k_range, scores)
+plt.xlabel('Value of K for KNN')
+plt.ylabel('Testing Accuracy')
+
